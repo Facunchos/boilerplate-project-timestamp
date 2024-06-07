@@ -24,6 +24,20 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get("/api/:date", function (req, res) {
+  let fecha = req.params.date
+  const fechaInput = new Date(fecha)
+  console.log('fecha', fecha, typeof fecha)
+  if (fechaInput instanceof Date && /^\d+$/.test(fecha) ){
+    let fechaUnix = new Date(fecha * 1)
+    res.json({unix: Number(fecha), utc: fechaUnix.toUTCString()});
+  } else if (fechaInput instanceof Date) {
+    const fechaToUnix = Math.floor(new Date(fecha).getTime())
+    res.json({unix: fechaToUnix, utc: fechaInput.toUTCString()});
+  } else {
+    res.json.console.error({error : "Invalid Date" });
+  }
+});
 
 
 // Listen on port set in environment variable or default to 3000
